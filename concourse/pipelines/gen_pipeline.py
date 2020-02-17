@@ -297,7 +297,7 @@ def main():
         action='store',
         dest='os_types',
         default=['centos6'],
-        choices=['centos6', 'centos7', 'ubuntu18.04', 'win'],
+        choices=['centos6', 'centos7', 'ubuntu18.04', 'sles12', 'win'],
         nargs='+',
         help='List of OS values to support'
     )
@@ -373,7 +373,7 @@ def main():
         args.pipeline_configuration = 'prod'
 
     if args.pipeline_configuration == 'prod' or args.pipeline_configuration == 'full':
-        args.os_types = ['centos6', 'centos7', 'ubuntu18.04', 'win']
+        args.os_types = ['centos6', 'centos7', 'ubuntu18.04', 'sles12', 'win']
         args.test_sections = [
             'ICW',
             'Replication',

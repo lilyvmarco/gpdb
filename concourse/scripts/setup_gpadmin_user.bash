@@ -77,6 +77,11 @@ setup_gpadmin_user() {
       user_add_cmd="/usr/sbin/useradd -G supergroup,tty gpadmin -s /bin/bash"
       create_gpadmin_if_not_existing ${user_add_cmd}
       ;;
+    sles)
+      groupadd gpadmin
+      user_add_cmd="/usr/sbin/useradd -G gpadmin,supergroup,tty gpadmin"
+      create_gpadmin_if_not_existing ${user_add_cmd}
+      ;;
     *) echo "Unknown OS: $TEST_OS"; exit 1 ;;
   esac
   echo -e "password\npassword" | passwd gpadmin
@@ -123,6 +128,10 @@ determine_os() {
     echo "ubuntu"
     return
   fi
+  if grep -q ID=\"sles\" /etc/os-release ; then
+    echo "sles"
+    return
+  fi
   echo "Could not determine operating system type" >/dev/stderr
   exit 1
 }
@@ -132,6 +141,9 @@ determine_os() {
 # for other OSs used by Concourse.
 # https://github.com/Pivotal-DataFabric/toolsmiths-images/pull/27
 workaround_before_concourse_stops_stripping_suid_bits() {
+  if [[ $TEST_OS == "sles" ]]; then
+    return
+  fi
   chmod u+s /bin/ping
 }
 
